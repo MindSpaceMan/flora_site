@@ -1,4 +1,3 @@
-// components/ImageWithFallback.tsx
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
@@ -11,8 +10,8 @@ type Props = Omit<
 > & {
     src: string | StaticImageData;
     alt: string;
-    className?: string;         // классы для <Image>
-    wrapperClassName?: string;  // классы для обёртки (высота/ratio)
+    className?: string;
+    wrapperClassName?: string;  // классы обёртки (высота/ratio)
     fallbackSrc?: string;
 };
 
@@ -34,7 +33,6 @@ export function ImageWithFallback({
         onError?.(e);
     };
 
-    // Статический импорт — у него уже есть width/height
     if (typeof actualSrc !== "string") {
         return (
             <Image
@@ -50,7 +48,6 @@ export function ImageWithFallback({
         );
     }
 
-    // URL-строка — рендерим через fill. Нужна relative-обёртка с высотой/ratio.
     return (
         <div className={cn("relative w-full", wrapperClassName)}>
             <Image

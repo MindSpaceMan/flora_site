@@ -52,12 +52,11 @@ export function CategoriesSection() {
                         >
                             <div className="relative overflow-hidden rounded-2xl shadow-md">
                                 <ImageWithFallback
-                                    src={category.image}         // string | StaticImageData
+                                    src={category.image}
                                     alt={category.name}
                                     className="transition-transform duration-300 group-hover:scale-110"
-                                    wrapperClassName="h-64 w-full"  // задаём высоту обёртке
+                                    wrapperClassName="h-64 w-full"
                                     sizes="(min-width:1024px) 25vw, (min-width:768px) 33vw, 100vw"
-                                    priority={index < 2}            // опционально
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 
