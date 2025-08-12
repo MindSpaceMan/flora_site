@@ -1,18 +1,26 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
+
+import { Header } from "@/app/components/Header";
+import { ContactsSection } from "@/app/components/ContactsSection";
+import { Footer } from "@/app/components/Footer";
+
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
+import AddToCartButton from "@/app/components/AddToCartButton";
+
 import { Button } from "@/app/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
-import { ChevronLeft, ChevronRight, Star, Heart, ShoppingCart, Minus, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Heart, Minus, Plus } from "lucide-react";
 
+// --- demo-данные для страницы товара ---
 const productImages = [
-  "https://images.unsplash.com/photo-1597848212624-e50d736d1dc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-  "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-  "https://images.unsplash.com/photo-1551058503-5a62456d78b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-  "https://images.unsplash.com/photo-1606923599723-0b8df2dd8af6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1597848212624-e50d736d1dc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1551058503-5a62456d78b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1606923599723-0b8df2dd8af6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
 ];
 
 const productVariants = [
@@ -25,26 +33,58 @@ const productVariants = [
 ];
 
 const relatedProducts = [
-  { name: "White Dream", image: "https://images.unsplash.com/photo-1597848212624-e50d736d1dc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { name: "Pink Elegance", image: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
-  { name: "Purple Majesty", image: "https://images.unsplash.com/photo-1551058503-5a62456d78b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" },
+  { name: "White Dream", image: "https://images.unsplash.com/photo-1597848212624-e50d736d1dc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+  { name: "Pink Elegance", image: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+  { name: "Purple Majesty", image: "https://images.unsplash.com/photo-1551058503-5a62456d78b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
 ];
 
-export function ProductPage() {
-  const { slug, productId } = useParams<{ slug: string; productId: string }>();
-  // на всякий случай — рендерим скелетон, если роут ещё не готов
+export default function Page() {
+  const params = useParams<{ slug?: string; productId?: string }>();
+  const slug = typeof params?.slug === "string" ? params.slug : undefined;
+  const productId = typeof params?.productId === "string" ? params.productId : undefined;
+
+  // если роут ещё не прогрузился
   if (!slug || !productId) {
-    return <div className="container mx-auto px-4 py-16 text-gray-500">Загрузка…</div>;
+    return (
+        <div className="min-h-screen bg-white">
+          <Header />
+          <main>
+            <div className="container mx-auto px-4 py-16 text-gray-500">Загрузка…</div>
+          </main>
+          <Footer />
+        </div>
+    );
   }
 
+  const productTitle = "White Aurora";
+
+  return (
+      <div className="min-h-screen bg-white">
+        <Header />
+        <main>
+          <ProductPage slug={slug} productId={productId} productTitle={productTitle} />
+          <ContactsSection />
+        </main>
+        <Footer />
+      </div>
+  );
+}
+
+function ProductPage({
+                       slug,
+                       productId,
+                       productTitle,
+                     }: {
+  slug: string;
+  productId: string;
+  productTitle: string;
+}) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % productImages.length);
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + productImages.length) % productImages.length);
-
-  const productTitle = "White Aurora";
 
   return (
       <div className="py-8 bg-white">
@@ -54,7 +94,7 @@ export function ProductPage() {
             <Link href="/" className="hover:text-[#CD8567] transition-colors">Home</Link>
             <span>›</span>
             <Link href={`/catalog/${slug}`} className="hover:text-[#CD8567] transition-colors">
-              {String(slug)}
+              {slug}
             </Link>
             <span>›</span>
             <span className="text-[#4A3A2B] font-medium">{productTitle}</span>
@@ -65,12 +105,12 @@ export function ProductPage() {
             <div className="space-y-4">
               {/* Main Image */}
               <div className="relative">
-                <div className="w-full h-[600px] border-2 border-[#F5E4D2] rounded-2xl overflow-hidden bg-[#FDF8F5]">
+                <div className="relative w-full h-[600px] border-2 border-[#F5E4D2] rounded-2xl overflow-hidden bg-[#FDF8F5]">
                   <ImageWithFallback
                       src={productImages[currentImageIndex]}
                       alt={`${productTitle} Эустома`}
-                      className="w-full h-full object-cover"
-                      wrapperClassName="h-full w-full"
+                      fill
+                      className="object-cover"
                       sizes="(min-width:1024px) 50vw, 100vw"
                   />
                   {/* Navigation Buttons */}
@@ -96,14 +136,17 @@ export function ProductPage() {
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
                         className={`w-20 h-20 border-2 rounded-lg overflow-hidden transition-all duration-300 ${
-                            currentImageIndex === index ? "border-[#CD8567] ring-2 ring-[#CD8567]/20" : "border-[#F5E4D2] hover:border-[#CD8567]/50"
+                            currentImageIndex === index
+                                ? "border-[#CD8567] ring-2 ring-[#CD8567]/20"
+                                : "border-[#F5E4D2] hover:border-[#CD8567]/50"
                         }`}
                     >
                       <ImageWithFallback
                           src={image}
                           alt={`Thumbnail ${index + 1}`}
-                          className="w-full h-full object-cover"
-                          wrapperClassName="h-full w-full"
+                          width={80}
+                          height={80}
+                          className="object-cover"
                           sizes="80px"
                       />
                     </button>
@@ -159,11 +202,16 @@ export function ProductPage() {
                           key={index}
                           onClick={() => setSelectedVariant(index)}
                           className={`p-3 rounded-xl border-2 transition-all duration-300 ${
-                              selectedVariant === index ? "border-[#CD8567] bg-[#CD8567]/5" : "border-[#F5E4D2] hover:border-[#CD8567]/50"
+                              selectedVariant === index
+                                  ? "border-[#CD8567] bg-[#CD8567]/5"
+                                  : "border-[#F5E4D2] hover:border-[#CD8567]/50"
                           }`}
                       >
                         <div className="flex items-center space-x-2">
-                          <div className="w-4 h-4 rounded-full border border-gray-300" style={{ backgroundColor: variant.color }} />
+                          <div
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: variant.color }}
+                          />
                           <span className="text-sm font-medium text-[#4A3A2B]">{variant.name}</span>
                         </div>
                       </button>
@@ -198,11 +246,18 @@ export function ProductPage() {
                 </div>
 
                 <div className="flex space-x-3">
-                  <Button className="flex-1 bg-[#CD8567] hover:bg-[#B8714C] text-white h-12 rounded-xl">
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    В корзину
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-12 h-12 border-[#CD8567] text-[#CD8567] hover:bg-[#CD8567] hover:text-white rounded-xl">
+                  <AddToCartButton
+                      id={String(productId)}
+                      slug={slug}
+                      name={productTitle}
+                      image={productImages[currentImageIndex]}
+                  />
+                  <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-12 h-12 border-[#CD8567] text-[#CD8567] hover:bg-[#CD8567] hover:text-white rounded-xl"
+                      aria-label="Добавить в избранное"
+                  >
                     <Heart className="w-5 h-5" />
                   </Button>
                 </div>
@@ -228,7 +283,9 @@ export function ProductPage() {
                   Растение достигает высоты 60-80 см, цветет обильно с июля по сентябрь.
                   Цветки имеют нежную текстуру и долго сохраняют свежесть в срезке.
                 </p>
-                <p className="text-gray-700 leading-relaxed">Семена высокого качества с отличной всхожестью. В упаковке 50 семян.</p>
+                <p className="text-gray-700 leading-relaxed">
+                  Семена высокого качества с отличной всхожестью. В упаковке 50 семян.
+                </p>
               </div>
             </TabsContent>
 
@@ -275,7 +332,8 @@ export function ProductPage() {
                           </div>
                         </div>
                         <p className="text-gray-700 text-sm">
-                          Отличные семена! Всхожесть почти 100%. Цветы получились очень красивые, точно как на картинке. Обязательно закажу еще!
+                          Отличные семена! Всхожесть почти 100%. Цветы получились очень красивые,
+                          точно как на картинке. Обязательно закажу еще!
                         </p>
                       </div>
                     </div>
@@ -296,7 +354,8 @@ export function ProductPage() {
                           </div>
                         </div>
                         <p className="text-gray-700 text-sm">
-                          Очень довольна покупкой. Эустомы зацвели рано и цвели до самых заморозков. Белые цветы просто великолепные!
+                          Очень довольна покупкой. Эустомы зацвели рано и цвели до самых заморозков.
+                          Белые цветы просто великолепные!
                         </p>
                       </div>
                     </div>
@@ -310,19 +369,22 @@ export function ProductPage() {
           <div>
             <h2 className="text-2xl font-medium text-[#4A3A2B] mb-6">Похожие товары</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedProducts.map((p, i) => (
-                  <div key={i} className="group cursor-pointer bg-[#FDF8F5] rounded-xl p-4 hover:shadow-lg transition-all duration-300">
-                    <div className="w-full h-48 rounded-lg overflow-hidden mb-3">
+              {relatedProducts.map((card, i) => (
+                  <div
+                      key={i}
+                      className="group cursor-pointer bg-[#FDF8F5] rounded-xl p-4 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden mb-3">
                       <ImageWithFallback
-                          src={p.image}
-                          alt={p.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          wrapperClassName="h-full w-full"
+                          src={card.image}
+                          alt={card.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                           sizes="(min-width:768px) 33vw, 100vw"
                       />
                     </div>
                     <h3 className="text-lg font-medium text-[#4A3A2B] group-hover:text-[#CD8567] transition-colors">
-                      {p.name}
+                      {card.name}
                     </h3>
                     <p className="text-sm text-gray-600 mt-1">Эустома махровая</p>
                   </div>
