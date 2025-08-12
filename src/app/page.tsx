@@ -1,12 +1,12 @@
 "use client";
 // app/page.tsx
-import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/HeroSection";
-import { CategoriesSection } from "@/components/CategoriesSection";
-import { PopularProductsSection } from "@/components/PopularProductsSection";
-import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { ContactsSection } from "@/components/ContactsSection";
-import { Footer } from "@/components/Footer";
+import { Header } from "@/app/components/Header";
+import { HeroSection } from "@/app/components/HeroSection";
+import { CategoriesSection } from "@/app/components/CategoriesSection";
+import { PopularProductsSection } from "@/app/components/PopularProductsSection";
+import { TestimonialsSection } from "@/app/components/TestimonialsSection";
+import { ContactsSection } from "@/app/components/ContactsSection";
+import { Footer } from "@/app/components/Footer";
 
 export default function Page() {
     return (

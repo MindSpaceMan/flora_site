@@ -2,7 +2,7 @@
 
 import Image, { type StaticImageData } from "next/image";
 import * as React from "react";
-import { cn } from "@/components/ui/utils";
+import { cn } from "@/app/components/ui/utils";
 
 type Props = Omit<
     React.ComponentProps<typeof Image>,

@@ -1,5 +1,5 @@
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import eustomaImage from '@/assets/eustoma.jpg';
+import eustomaImage from '@/app/assets/eustoma.jpg';
 
 const categories = [
     {

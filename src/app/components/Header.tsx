@@ -1,3 +1,5 @@
+"use client"
+
 import { Menu, X, ShoppingCart, Phone } from 'lucide-react';
 import { Button } from "./ui/button";
 import { useState } from 'react';
