@@ -1,17 +1,20 @@
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import eustomaImage from '@/app/assets/eustoma.jpg';
+import tulipsImage from '@/app/assets/tulip.jpg';
+import chrysanthemumImage from '@/app/assets/chrysanthemum.jpg';
+import orchideasImage from '@/app/assets/orchideas.jpg';
 
 const categories = [
     {
         name: "Хризантемы",
         subtitle: "семена, луковицы, рассада",
-        image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        image: chrysanthemumImage,
         description: "Яркие осенние красавицы"
     },
     {
         name: "Тюльпаны",
         subtitle: "семена, луковицы, рассада",
-        image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        image: tulipsImage,
         description: "Весенняя нежность и красота"
     },
     {
@@ -23,7 +26,7 @@ const categories = [
     {
         name: "Орхидеи",
         subtitle: "семена, луковицы, рассада",
-        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        image: orchideasImage,
         description: "Экзотическая красота"
     }
 ];

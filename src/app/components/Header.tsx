@@ -13,7 +13,7 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <h1 className="text-2xl font-medium text-[#CD8567]">АуроФлора</h1>
+            <h1 className="text-2xl font-medium text-[#CD8567]">ФлораМикс</h1>
           </div>
 
           {/* Desktop Navigation */}

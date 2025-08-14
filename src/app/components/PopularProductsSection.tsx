@@ -1,32 +1,36 @@
 import { Button } from "./ui/button";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ShoppingCart, Heart } from "lucide-react";
+import rosePeachImage from '@/app/assets/rose_peach_popular.jpg';
+import roseWhiteImage from '@/app/assets/rose_white_popular.jpg';
+import rosePopularImage from '@/app/assets/rose_popular.jpg';
+import tulipPopularImage from '@/app/assets/tulip_popular.jpg';
 
 const products = [
   {
     name: "Набор \"Персиковый сад\"",
     description: "15 луковиц персиковых роз",
     subtitle: "луковицы",
-    image: "https://images.unsplash.com/photo-1606923599723-0b8df2dd8af6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    image: rosePeachImage,
     isPopular: true
   },
   {
     name: "Рассада \"Нежность\"",
     description: "21 саженец белых роз",
     subtitle: "рассада",
-    image: "https://images.unsplash.com/photo-1551058503-5a62456d78b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    image: roseWhiteImage
   },
   {
     name: "Семена \"Весна\"",
     description: "Смесь семян тюльпанов",
     subtitle: "семена", 
-    image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    image: tulipPopularImage
   },
   {
     name: "Луковицы \"Роскошь\"",
     description: "25 луковиц красных роз",
     subtitle: "луковицы",
-    image: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    image: rosePopularImage
   }
 ];
 
@@ -56,6 +60,7 @@ export function PopularProductsSection() {
                 <ImageWithFallback
                   src={product.image}
                   alt={product.name}
+                  wrapperClassName="h-64 w-full"
                   className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
                 />
                 

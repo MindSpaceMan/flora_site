@@ -73,8 +73,8 @@ export function ContactsSection() {
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-white/10 rounded-full animate-ping"></div>
                   </div>
                   
-                  <h3 className="text-xl font-medium mb-2">АуроФлора</h3>
-                  <p className="text-sm opacity-90 mb-4">Москва, ул. Садовая, 15</p>
+                  <h3 className="text-xl font-medium mb-2">ФлораМикс</h3>
+                  <p className="text-sm opacity-90 mb-4">Симферополь, ул. Киевская, 25</p>
                   
                   {/* Decorative plants */}
                   <div className="flex justify-center space-x-4 mt-6">
@@ -173,7 +173,7 @@ export function ContactsSection() {
                   </div>
                   <div>
                     <p className="font-medium text-gray-800">Адрес</p>
-                    <p className="text-gray-600">Москва, ул. Садовая, 15</p>
+                    <p className="text-gray-600">Симферополь, ул. Киевская, 25</p>
                   </div>
                 </div>
 
@@ -183,7 +183,7 @@ export function ContactsSection() {
                   </div>
                   <div>
                     <p className="font-medium text-gray-800">Режим работы</p>
-                    <p className="text-gray-600">Ежедневно с 9:00 до 21:00</p>
+                    <p className="text-gray-600">Ежедневно с 9:00 до 19:00</p>
                   </div>
                 </div>
               </div>

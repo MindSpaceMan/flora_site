@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-medium mb-4 text-[#FFBFA0]">АуроФлора</h3>
+            <h3 className="text-xl font-medium mb-4 text-[#FFBFA0]">ФлораМикс</h3>
             <p className="text-white/80 mb-4 leading-relaxed">
               Доставляем качественные семена, луковицы и рассаду с любовью и заботой по всей Москве уже более 10 лет.
             </p>
@@ -97,7 +97,7 @@ export function Footer() {
               <div className="flex items-start">
                 <MapPin className="w-4 h-4 mr-3 text-[#FFBFA0] mt-0.5" />
                 <span className="text-white/80">
-                  Москва, ул. Садовая, 15
+                  Симферополь, ул. Киевская, 25
                 </span>
               </div>
             </div>
@@ -108,7 +108,7 @@ export function Footer() {
         <div className="border-t border-white/20 mt-8 pt-8 text-center">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-white/60 mb-4 md:mb-0">
-              © 2024 АуроФлора. Все права защищены.
+              © {new Date().getFullYear()} ФлораМикс. Все права защищены.
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-white/60 hover:text-[#FFBFA0] transition-colors text-sm">

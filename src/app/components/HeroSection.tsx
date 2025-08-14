@@ -1,13 +1,13 @@
 import { Button } from "./ui/button";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import mainPhone from "@/app/assets/main_phone.jpg";
 
 export function HeroSection() {
   return (
     <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <ImageWithFallback
-          src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+        <ImageWithFallback src={mainPhone}
           alt="Семена и рассада для посадки"
           className="w-full h-full object-cover"
         />

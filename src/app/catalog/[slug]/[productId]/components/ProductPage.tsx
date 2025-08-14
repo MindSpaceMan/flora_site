@@ -4,10 +4,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 
-import { Header } from "@/app/components/Header";
-import { ContactsSection } from "@/app/components/ContactsSection";
-import { Footer } from "@/app/components/Footer";
-
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import AddToCartButton from "@/app/components/AddToCartButton";
 
@@ -60,12 +56,9 @@ export default function Page() {
 
   return (
       <div className="min-h-screen bg-white">
-        <Header />
         <main>
           <ProductPage slug={slug} productId={productId} productTitle={productTitle} />
-          <ContactsSection />
         </main>
-        <Footer />
       </div>
   );
 }
