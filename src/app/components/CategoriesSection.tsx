@@ -1,4 +1,5 @@
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import Link from "next/link";
 import eustomaImage from '@/app/assets/eustoma.jpg';
 import tulipsImage from '@/app/assets/tulip.jpg';
 import chrysanthemumImage from '@/app/assets/chrysanthemum.jpg';
@@ -7,24 +8,28 @@ import orchideasImage from '@/app/assets/orchideas.jpg';
 const categories = [
     {
         name: "Хризантемы",
+        slug: "hrizantemy",
         subtitle: "семена, луковицы, рассада",
         image: chrysanthemumImage,
         description: "Яркие осенние красавицы"
     },
     {
         name: "Тюльпаны",
+        slug: "tyulpany",
         subtitle: "семена, луковицы, рассада",
         image: tulipsImage,
         description: "Весенняя нежность и красота"
     },
     {
         name: "Эустомы",
+        slug: "eustomy",
         subtitle: "семена, луковицы, рассада",
         image: eustomaImage,
         description: "Нежные розоподобные цветы"
     },
     {
         name: "Орхидеи",
+        slug: "orkhidei",
         subtitle: "семена, луковицы, рассада",
         image: orchideasImage,
         description: "Экзотическая красота"
@@ -49,9 +54,10 @@ export function CategoriesSection() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {categories.map((category, index) => (
-                        <div
+                        <Link
                             key={index}
-                            className="group cursor-pointer transform transition-all duration-300 hover:scale-105"
+                            href={`/catalog/${category.slug}`}
+                            className="group cursor-pointer transform transition-all duration-300 hover:scale-105 block"
                         >
                             <div className="relative overflow-hidden rounded-2xl shadow-md">
                                 <ImageWithFallback
@@ -73,7 +79,7 @@ export function CategoriesSection() {
                                     <p className="text-sm text-white/90">{category.description}</p>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

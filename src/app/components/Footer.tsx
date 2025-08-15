@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin, Heart } from "lucide-react";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -7,9 +8,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-medium mb-4 text-[#FFBFA0]">ФлораМикс</h3>
+            <h3 className="text-xl font-medium mb-4 text-[#FFBFA0]">Флора Микс</h3>
             <p className="text-white/80 mb-4 leading-relaxed">
-              Доставляем качественные семена, луковицы и рассаду с любовью и заботой по всей Москве уже более 10 лет.
+              Доставляем качественные семена, луковицы и рассаду с любовью и заботой по всей РФ уже более 10 лет.
             </p>
             <div className="flex items-center text-white/60">
               <Heart className="w-4 h-4 mr-2 text-[#FFBFA0]" />
@@ -22,24 +23,19 @@ export function Footer() {
             <h4 className="text-lg font-medium mb-4 text-[#FFBFA0]">Навигация</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#catalog" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
+                <Link href="/catalog" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
                   Каталог
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#delivery" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
+                <Link href="/delivery" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
                   Доставка
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#about" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
-                  О нас
-                </a>
-              </li>
-              <li>
-                <a href="#contacts" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
+                <Link href="/#contacts" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
                   Контакты
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -49,24 +45,24 @@ export function Footer() {
             <h4 className="text-lg font-medium mb-4 text-[#FFBFA0]">Категории для посадки</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
+                <Link href="/catalog/hrizantemy" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
                   Хризантемы
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
+                <Link href="/catalog/tyulpany" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
                   Тюльпаны
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
+                <Link href="/catalog/eustomy" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
                   Эустомы
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
+                <Link href="/catalog/orkhidei" className="text-white/80 hover:text-[#FFBFA0] transition-colors">
                   Орхидеи
-                </a>
+                </Link>
               </li>
             </ul>
             <p className="text-xs text-white/60 mt-2">семена, луковицы, рассада</p>
@@ -108,10 +104,10 @@ export function Footer() {
         <div className="border-t border-white/20 mt-8 pt-8 text-center">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-white/60 mb-4 md:mb-0">
-              © {new Date().getFullYear()} ФлораМикс. Все права защищены.
+              © {new Date().getFullYear()} Флора Микс. Все права защищены.
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="text-white/60 hover:text-[#FFBFA0] transition-colors text-sm">
+              <a href="/privacy" className="text-white/60 hover:text-[#FFBFA0] transition-colors text-sm">
                 Политика конфиденциальности
               </a>
               <a href="#" className="text-white/60 hover:text-[#FFBFA0] transition-colors text-sm">

@@ -1,6 +1,7 @@
 import { Button } from "./ui/button";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import mainPhone from "@/app/assets/main_phone.jpg";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -39,8 +40,11 @@ export function HeroSection() {
           <Button 
             size="lg"
             className="text-[#CD8567] bg-white/90 hover:bg-white transition-colors duration-200 px-8 py-3 text-lg border-0"
+            asChild
           >
-            Каталог
+            <Link href="/catalog">
+              Каталог
+            </Link>
           </Button>
         </div>
       </div>

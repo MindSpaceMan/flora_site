@@ -25,15 +25,15 @@ import {
 
 // ------------------ Demo data (как у тебя) ------------------
 const products = [
-  { id: 1, name: "Роза «Красная Королева»", type: "Луковицы", description: "Классическая красная роза с насыщенным ароматом", image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "350 ₽", originalPrice: "450 ₽", isNew: false, isPopular: true, isSale: true, stock: "В наличии", rating: 4.8 },
-  { id: 2, name: "Роза «Белоснежка»", type: "Рассада", description: "Элегантная белая роза для торжественных случаев", image: "https://images.unsplash.com/photo-1551058503-5a62456d78b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "420 ₽", originalPrice: null, isNew: true, isPopular: false, isSale: false, stock: "В наличии", rating: 4.9 },
-  { id: 3, name: "Роза «Персиковый Закат»", type: "Семена", description: "Нежные персиковые оттенки для романтичного сада", image: "https://images.unsplash.com/photo-1606923599723-0b8df2dd8af6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "280 ₽", originalPrice: null, isNew: false, isPopular: true, isSale: false, stock: "В наличии", rating: 4.7 },
-  { id: 4, name: "Роза «Розовая Мечта»", type: "Луковицы", description: "Нежно-розовая роза с долгим цветением", image: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "390 ₽", originalPrice: "480 ₽", isNew: false, isPopular: false, isSale: true, stock: "Мало в наличии", rating: 4.6 },
-  { id: 5, name: "Роза «Золотое Сияние»", type: "Рассада", description: "Уникальная желтая роза с золотистым отливом", image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "520 ₽", originalPrice: null, isNew: true, isPopular: true, isSale: false, stock: "В наличии", rating: 5.0 },
-  { id: 6, name: "Роза «Лиловый Туман»", type: "Семена", description: "Редкая фиолетовая роза с необычным окрасом", image: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "650 ₽", originalPrice: null, isNew: true, isPopular: false, isSale: false, stock: "Под заказ", rating: 4.5 },
-  { id: 7, name: "Роза «Малиновый Бархат»", type: "Луковицы", description: "Глубокий малиновый цвет с бархатистыми лепестками", image: "https://images.unsplash.com/photo-1518621012806-19718d6eeffe?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "440 ₽", originalPrice: "520 ₽", isNew: false, isPopular: true, isSale: true, stock: "В наличии", rating: 4.8 },
-  { id: 8, name: "Роза «Кремовая Нежность»", type: "Рассада", description: "Изысканная кремовая роза для утонченных натур", image: "https://images.unsplash.com/photo-1561181286-d52888359fee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "380 ₽", originalPrice: null, isNew: false, isPopular: false, isSale: false, stock: "В наличии", rating: 4.7 },
-  { id: 9, name: "Роза «Огненная Страсть»", type: "Семена", description: "Яркая оранжево-красная роза с интенсивным цветом", image: "https://images.unsplash.com/photo-1455690378663-615551044797?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", price: "320 ₽", originalPrice: "400 ₽", isNew: false, isPopular: false, isSale: true, stock: "В наличии", rating: 4.4 },
+  { id: 1, name: "Роза «Красная Королева»", type: "Луковицы", description: "Классическая красная роза с насыщенным ароматом", image: "/rose_popular.jpg", price: "350 ₽", originalPrice: "450 ₽", isNew: false, isPopular: true, isSale: true, stock: "В наличии", rating: 4.8 },
+  { id: 2, name: "Роза «Белоснежка»", type: "Рассада", description: "Элегантная белая роза для торжественных случаев", image: "/rose_white_popular.jpg", price: "420 ₽", originalPrice: null, isNew: true, isPopular: false, isSale: false, stock: "В наличии", rating: 4.9 },
+  { id: 3, name: "Роза «Персиковый Закат»", type: "Семена", description: "Нежные персиковые оттенки для романтичного сада", image: "/rose_peach_popular.jpg", price: "280 ₽", originalPrice: null, isNew: false, isPopular: true, isSale: false, stock: "В наличии", rating: 4.7 },
+  { id: 4, name: "Роза «Розовая Мечта»", type: "Луковицы", description: "Нежно-розовая роза с долгим цветением", image: "/tulip_popular.jpg", price: "390 ₽", originalPrice: "480 ₽", isNew: false, isPopular: false, isSale: true, stock: "Мало в наличии", rating: 4.6 },
+  { id: 5, name: "Роза «Золотое Сияние»", type: "Рассада", description: "Уникальная желтая роза с золотистым отливом", image: "/eustoma.jpg", price: "520 ₽", originalPrice: null, isNew: true, isPopular: true, isSale: false, stock: "В наличии", rating: 5.0 },
+  { id: 6, name: "Роза «Лиловый Туман»", type: "Семена", description: "Редкая фиолетовая роза с необычным окрасом", image: "/chrysanthemum.jpg", price: "650 ₽", originalPrice: null, isNew: true, isPopular: false, isSale: false, stock: "Под заказ", rating: 4.5 },
+  { id: 7, name: "Роза «Малиновый Бархат»", type: "Луковицы", description: "Глубокий малиновый цвет с бархатистыми лепестками", image: "/tulip.jpg", price: "440 ₽", originalPrice: "520 ₽", isNew: false, isPopular: true, isSale: true, stock: "В наличии", rating: 4.8 },
+  { id: 8, name: "Роза «Кремовая Нежность»", type: "Рассада", description: "Изысканная кремовая роза для утонченных натур", image: "/orchideas.jpg", price: "380 ₽", originalPrice: null, isNew: false, isPopular: false, isSale: false, stock: "В наличии", rating: 4.7 },
+  { id: 9, name: "Роза «Огненная Страсть»", type: "Семена", description: "Яркая оранжево-красная роза с интенсивным цветом", image: "/main_phone.jpg", price: "320 ₽", originalPrice: "400 ₽", isNew: false, isPopular: false, isSale: true, stock: "В наличии", rating: 4.4 },
 ];
 
 type PageProps = { params?: { slug?: string } };
@@ -92,10 +92,14 @@ function ProductsPageInner({ params }: PageProps) {
         <div className="container mx-auto px-4">
           {/* Breadcrumbs */}
           <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-            <Home className="w-4 h-4" />
-            <span>Главная</span>
+            <Link href="/" className="flex items-center space-x-2 hover:text-[#CD8567] transition-colors">
+              <Home className="w-4 h-4" />
+              <span>Главная</span>
+            </Link>
             <ChevronRight className="w-4 h-4" />
-            <span>Категории</span>
+            <Link href="/catalog" className="hover:text-[#CD8567] transition-colors">
+              Категории
+            </Link>
             <ChevronRight className="w-4 h-4" />
             <span className="text-[#CD8567] font-medium">{categoryTitle}</span>
           </nav>
@@ -122,7 +126,7 @@ function ProductsPageInner({ params }: PageProps) {
             <div className="bg-gradient-to-r from-[#FDF8F5] to-[#F4E4D6] rounded-2xl p-6">
               <p className="text-gray-700 leading-relaxed">
                 Откройте для себя мир прекрасных {categoryTitle.toLowerCase()} в садовом центре
-                &nbsp;«Сады Рассвета». От классических оттенков до редких сортов — у нас есть варианты на любой вкус.
+                &nbsp;«Флора Микс». От классических оттенков до редких сортов — у нас есть варианты на любой вкус.
               </p>
             </div>
           </div>
