@@ -2,8 +2,7 @@
 
 import { Menu, X, Phone } from 'lucide-react';
 import { Button } from "./ui/button";
-import { useState, useCallback } from 'react';
-import { useCart } from "@/store/cart";
+import { useState, useCallback, useEffect } from 'react';
 import HeaderCart from "./HeaderCart";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,8 +16,24 @@ const navigationItems = [
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const cartItemCount = useCart((s) => s.items.reduce((sum, i) => sum + i.qty, 0));
+  const [currentHash, setCurrentHash] = useState("");
+  const [hasMounted, setHasMounted] = useState(false);
   const pathname = usePathname();
+
+  // Handle hash changes on client side
+  useEffect(() => {
+    setHasMounted(true);
+    if (typeof window !== 'undefined') {
+      setCurrentHash(window.location.hash);
+      
+      const handleHashChange = () => {
+        setCurrentHash(window.location.hash);
+      };
+
+      window.addEventListener('hashchange', handleHashChange);
+      return () => window.removeEventListener('hashchange', handleHashChange);
+    }
+  }, []);
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen(prev => !prev);
@@ -30,7 +45,8 @@ export function Header() {
 
   const isActive = (href: string) => {
     if (href === "/#contacts") {
-      return pathname === "/" && window.location.hash === "#contacts";
+      // Only check hash after component has mounted to prevent hydration mismatch
+      return pathname === "/" && (hasMounted ? currentHash === "#contacts" : false);
     }
     return pathname === href;
   };

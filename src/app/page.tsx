@@ -4,6 +4,7 @@ import { HeroSection } from "@/app/components/HeroSection";
 import { CategoriesSection } from "@/app/components/CategoriesSection";
 import { TestimonialsSection } from "@/app/components/TestimonialsSection";
 import { ContactsSection } from "@/app/components/ContactsSection";
+import { TestCartSection } from "@/app/components/TestCartSection";
 
 export default function Page() {
     return (
