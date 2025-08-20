@@ -2,78 +2,75 @@
 "use client";
 
 import { useState } from "react";
-import { useCart } from "@/store/cart";
 import { Button } from "@/app/components/ui/button";
-import { Check, ShoppingCart, Plus } from "lucide-react";
+import { useCart } from "@/store/cart";
+import { ShoppingCart, Check } from "lucide-react";
 
-type Props = {
-    id: string;       // productId
-    slug: string;     // категория (из URL)
-    name: string;
-    image?: string;
-    qty?: number;
-    className?: string;
-};
+interface AddToCartButtonProps {
+  id: string;
+  slug: string;
+  name: string;
+  image?: string;
+  qty?: number;
+  className?: string;
+}
 
-export default function AddToCartButton({ id, slug, name, image, qty = 1, className }: Props) {
-    const add = useCart((s) => s.add);
-    const [isAdding, setIsAdding] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
+export default function AddToCartButton({ 
+  id, 
+  slug, 
+  name, 
+  image, 
+  qty = 1,
+  className = "" 
+}: AddToCartButtonProps) {
+  const [isAdding, setIsAdding] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const add = useCart((s) => s.add);
 
-    const handleAddToCart = async () => {
-        setIsAdding(true);
-        
-        // Имитация задержки для лучшего UX
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        add({ id, slug, name, image }, qty);
-        
-        setIsAdding(false);
-        setShowSuccess(true);
-        
-        // Сброс состояния успеха через 2 секунды
-        setTimeout(() => {
-            setShowSuccess(false);
-        }, 2000);
-    };
+  const handleAddToCart = async () => {
+    setIsAdding(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    add({ id, slug, name, image }, qty);
+    
+    setIsAdding(false);
+    setShowSuccess(true);
+    
+    // Hide success state after 2 seconds
+    setTimeout(() => setShowSuccess(false), 2000);
+  };
 
+  if (showSuccess) {
     return (
-        <Button
-            onClick={handleAddToCart}
-            disabled={isAdding}
-            className={`relative overflow-hidden transition-all duration-300 transform hover:scale-105 ${
-                className ?? "bg-[#CD8567] hover:bg-[#B8714C] text-white"
-            }`}
-        >
-            {/* Animated background */}
-            <div className={`absolute inset-0 bg-green-500 transform transition-transform duration-500 ${
-                showSuccess ? 'translate-x-0' : 'translate-x-full'
-            }`} />
-            
-            {/* Content */}
-            <div className="relative flex items-center gap-2">
-                {isAdding ? (
-                    <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        <span>Добавление...</span>
-                    </>
-                ) : showSuccess ? (
-                    <>
-                        <Check className="w-4 h-4" />
-                        <span>Добавлено!</span>
-                    </>
-                ) : (
-                    <>
-                        <ShoppingCart className="w-4 h-4" />
-                        <span>В корзину</span>
-                    </>
-                )}
-            </div>
-            
-            {/* Ripple effect */}
-            {isAdding && (
-                <div className="absolute inset-0 bg-white/20 animate-pulse rounded" />
-            )}
-        </Button>
+      <Button 
+        disabled 
+        className={`bg-green-600 hover:bg-green-700 text-white ${className}`}
+      >
+        <Check className="w-4 h-4 mr-2" />
+        Добавлено в корзину
+      </Button>
     );
+  }
+
+  return (
+    <Button
+      onClick={handleAddToCart}
+      disabled={isAdding}
+      className={`bg-[#CD8567] hover:bg-[#B8714C] text-white ${className}`}
+    >
+      {isAdding ? (
+        <>
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+          Добавление...
+        </>
+      ) : (
+        <>
+          <ShoppingCart className="w-4 h-4 mr-2" />
+          В корзину
+        </>
+      )}
+    </Button>
+  );
 }

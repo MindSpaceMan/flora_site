@@ -1,83 +1,91 @@
+"use client";
+
 import Link from "next/link";
-import { categories } from "@/data/categories";
-import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback"; // проверь путь
+import { useEffect, useState } from "react";
+import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
+import { getCategories, type Category } from "@/lib/api";
 
 export function CategoryPage() {
-  return (
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        setLoading(true);
+        const data = await getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to load categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadCategories();
+  }, []);
+
+  if (loading) {
+    return (
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-medium text-gray-800 mb-4">
-              Категории для посадки
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-2">
-              Выберите идеальные материалы для вашего сада
-            </p>
-            <p className="text-sm text-gray-500">семена, луковицы, рассада</p>
-          </div>
-
-          {/* ТВОЯ сетка карточек + ссылки на /catalog/[slug] */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {categories.map((c) => (
-                <Link
-                    key={c.slug}
-                    href={`/catalog/${c.slug}`}
-                    className="group cursor-pointer flex flex-col items-center"
-                >
-                  <div className="relative w-40 h-40 mb-4">
-                    <div className="w-full h-full bg-[#FDF8F5] rounded-2xl border border-[#CD8567]/10 overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:scale-105">
-                      <div className="w-full h-full p-4 flex items-center justify-center">
-                        <ImageWithFallback
-                            src={c.image}
-                            alt={c.name}
-                            className="rounded-xl transition-transform duration-300 group-hover:scale-110"
-                            wrapperClassName="w-28 h-28"
-                            sizes="112px"
-                        />
-                      </div>
-                      {c.isNew && (
-                          <div className="absolute top-2 right-2">
-                            <div className="bg-[#CD8567] text-white px-2 py-1 rounded-md text-xs font-medium">
-                              NEW
-                            </div>
-                          </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-[#4A3A2B] text-center transition-colors duration-300 group-hover:text-[#CD8567]">
-                    {c.name}
-                  </h3>
-                </Link>
-            ))}
-          </div>
-
-          {/* нижний блок — как у тебя */}
-          <div className="mt-16 text-center bg-[#FDF8F5] rounded-2xl p-8">
-            <h2 className="text-2xl font-medium text-gray-800 mb-4">
-              Качественные материалы для каждого сада
-            </h2>
-            <p className="text-gray-600 max-w-3xl mx-auto mb-6">
-              В нашем садовом центре «Флора Микс» вы найдете только проверенные
-              временем сорта и качественный посадочный материал. Каждая категория
-              представлена широким ассортиментом семян, луковиц и рассады.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              <Stat num="500+" label="Видов растений" />
-              <Stat num="98%" label="Всхожесть семян" />
-              <Stat num="10 лет" label="Опыта работы" />
-            </div>
+          <div className="text-center py-20">
+            <div className="text-lg text-gray-600">Загрузка категорий...</div>
           </div>
         </div>
       </section>
-  );
-}
+    );
+  }
 
-function Stat({ num, label }: { num: string; label: string }) {
   return (
-      <div className="text-center">
-        <div className="text-2xl font-medium text-[#CD8567] mb-2">{num}</div>
-        <p className="text-gray-600">{label}</p>
+    <section className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-medium text-gray-800 mb-4">
+            Популярные категории для посадки
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-2">
+            Выберите идеальные материалы для любого сада
+          </p>
+          <p className="text-sm text-gray-500">
+            семена, луковицы, рассада
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((category, index) => (
+            <Link
+              key={category.id}
+              href={`/catalog/${category.slug}`}
+              className="group cursor-pointer transform transition-all duration-300 hover:scale-105 block"
+            >
+              <div className="relative overflow-hidden rounded-2xl shadow-md">
+                {category.imagePath ? (
+                  <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url(http://localhost:8337${category.imagePath})` }}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  </div>
+                ) : (
+                  <div className="aspect-square bg-gradient-to-br from-[#FDF8F5] to-[#F4E4D6] flex items-center justify-center">
+                    <div className="text-6xl text-[#CD8567] opacity-60">
+                      {category.name.charAt(0)}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 bg-[#CD8567]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="text-xl font-medium mb-1">{category.name}</h3>
+                  <p className="text-xs text-white/80 mb-2">Каталог товаров</p>
+                  <p className="text-sm text-white/90">Перейти к выбору</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
+    </section>
   );
 }
