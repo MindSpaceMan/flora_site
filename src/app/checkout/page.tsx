@@ -7,7 +7,7 @@ import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import { Trash2, Eye, EyeOff } from "lucide-react";
-import { useCart } from "@/store/cart";
+import { useApiCart } from "@/store/apiCart";
 import { createOrder } from "@/lib/api";
 import { FlashMessage } from "@/app/components/ui/flash-message";
 
@@ -37,7 +37,7 @@ function validate(values: CheckoutForm): Errors {
   if (!values.phone.trim()) {
     errors.phone = "Укажите телефон";
   } else if (!/^\d{10}$/.test(values.phone)) {
-    errors.phone = "Укажите телефон в формате +7 (XXX) XXX-XX-XX";
+    errors.phone = "Номер должен содержать 10 цифр";
   }
 
   if (!values.email.trim()) {
@@ -85,7 +85,11 @@ function validate(values: CheckoutForm): Errors {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items: cartItems, clear } = useCart();
+  const cartItems = useApiCart((s) => s.items);
+  const removeItem = useApiCart((s) => s.removeItem);
+  const addItem = useApiCart((s) => s.addItem);
+  const ensureCart = useApiCart((s) => s.ensureCart);
+  const cartToken = useApiCart((s) => s.cartToken);
   const [hasMounted, setHasMounted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -120,20 +124,27 @@ export default function CheckoutPage() {
 
   // Phone number formatting
   const formatPhoneDisplay = (value: string) => {
-    const cleaned = value.replace(/\D/g, "");
-    if (cleaned.length === 0) return "";
-    if (cleaned.length <= 3) return `+7 (${cleaned}`;
-    if (cleaned.length <= 6) return `+7 (${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
-    if (cleaned.length <= 8) return `+7 (${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
-    return `+7 (${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 8)}-${cleaned.slice(8, 10)}`;
+    const digits = value.replace(/\D/g, "");
+    const core = digits.replace(/^7|^8/, "").slice(0, 10);
+    if (!core.length) return "";
+    const p1 = core.slice(0, 3);
+    const p2 = core.slice(3, 6);
+    const p3 = core.slice(6, 8);
+    const p4 = core.slice(8, 10);
+    let out = "+7";
+    if (p1) out += ` (${p1}`;
+    if (p1 && p1.length === 3) out += ")";
+    if (p2) out += ` ${p2}`;
+    if (p3) out += `-${p3}`;
+    if (p4) out += `-${p4}`;
+    return out;
   };
 
   const normalizeToCanonicalRu = (displayValue: string) => {
-    const cleaned = displayValue.replace(/\D/g, "");
-    if (cleaned.length === 10) {
-      return cleaned; // Return just the 10 digits without +7
-    }
-    return displayValue;
+    const digits = displayValue.replace(/\D/g, "");
+    // drop leading 7 or 8, keep next 10 digits
+    const core = digits.replace(/^7|^8/, "").slice(0, 10);
+    return core;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +162,7 @@ export default function CheckoutPage() {
   };
 
   useEffect(() => {
-    if (phoneDisplay && !touched.phone) {
+    if (!touched.phone) {
       setPhoneDisplay(formatPhoneDisplay(values.phone));
     }
   }, [values.phone, touched.phone]);
@@ -190,13 +201,13 @@ export default function CheckoutPage() {
     try {
       setSubmitting(true);
       
-      // Generate a cart token (in real app, this would come from cart state)
-      const cartToken = "demo-cart-token-" + Date.now();
-      
+      await ensureCart();
+      if (!cartToken) {
+        throw new Error("Нет токена корзины");
+      }
       await createOrder(cartToken, values);
       
       setFlashMessage({ type: "success", message: "Заказ успешно оформлен!" });
-      clear();
       router.push("/");
     } catch (error) {
       console.error("Checkout error:", error);
@@ -402,7 +413,12 @@ export default function CheckoutPage() {
                   {cartItems.length > 0 && (
                     <Button
                       variant="outline"
-                      onClick={clear}
+                      onClick={async () => {
+                        const snapshot = [...cartItems];
+                        for (const it of snapshot) {
+                          try { await removeItem(it.product.id, it.quantity); } catch { /* ignore */ }
+                        }
+                      }}
                       className="text-red-600 border-red-200 hover:bg-red-50"
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
@@ -418,23 +434,21 @@ export default function CheckoutPage() {
                     {cartItems.map((item) => (
                       <div key={item.id} className="py-4 flex items-center gap-4">
                         <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                          {item.image ? (
+                          {(item.product?.images?.[0]?.url || item.product?.images?.[0]?.localPath) ? (
                             <ImageWithFallback
-                              src={item.image}
-                              alt={item.name}
+                              src={item.product.images[0].url || item.product.images[0].localPath || ""}
+                              alt={item.product.titleRu}
                               fill
                               className="object-cover"
                               sizes="64px"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400">
-                              🌱
-                            </div>
+                            <div className="w-full h-full flex items-center justify-center text-gray-400">🌱</div>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-gray-900 truncate">{item.name}</h3>
-                          <p className="text-sm text-gray-500">Количество: {item.qty}</p>
+                          <h3 className="font-medium text-gray-900 truncate">{item.product.titleRu}</h3>
+                          <p className="text-sm text-gray-500">Количество: {item.quantity}</p>
                         </div>
                       </div>
                     ))}
@@ -444,7 +458,7 @@ export default function CheckoutPage() {
                 <div className="mt-6 border-t pt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Всего товаров</span>
-                    <span className="text-lg font-semibold">{cartItems.reduce((sum, item) => sum + item.qty, 0)}</span>
+                    <span className="text-lg font-semibold">{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
                   </div>
                 </div>
               </div>

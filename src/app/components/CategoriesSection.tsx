@@ -1,42 +1,26 @@
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import Link from "next/link";
-import eustomaImage from '@/app/assets/eustoma.jpg';
-import tulipsImage from '@/app/assets/tulip.jpg';
-import chrysanthemumImage from '@/app/assets/chrysanthemum.jpg';
-import orchideasImage from '@/app/assets/orchideas.jpg';
-
-const categories = [
-    {
-        name: "Хризантемы",
-        slug: "hrizantemy",
-        subtitle: "семена, луковицы, рассада",
-        image: chrysanthemumImage,
-        description: "Яркие осенние красавицы"
-    },
-    {
-        name: "Тюльпаны",
-        slug: "tyulpany",
-        subtitle: "семена, луковицы, рассада",
-        image: tulipsImage,
-        description: "Весенняя нежность и красота"
-    },
-    {
-        name: "Эустомы",
-        slug: "eustomy",
-        subtitle: "семена, луковицы, рассада",
-        image: eustomaImage,
-        description: "Нежные розоподобные цветы"
-    },
-    {
-        name: "Орхидеи",
-        slug: "orkhidei",
-        subtitle: "семена, луковицы, рассада",
-        image: orchideasImage,
-        description: "Экзотическая красота"
-    }
-];
+import { useEffect, useState } from "react";
+import { getCategories, type Category } from "@/lib/api";
 
 export function CategoriesSection() {
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                setLoading(true);
+                const data = await getCategories();
+                if (!cancelled) setCategories(data);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+        return () => { cancelled = true; };
+    }, []);
+
     return (
         <section className="py-16 bg-white">
             <div className="container mx-auto px-4">
@@ -51,37 +35,34 @@ export function CategoriesSection() {
                         семена, луковицы, рассада
                     </p>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {categories.map((category, index) => (
-                        <Link
-                            key={index}
-                            href={`/catalog/${category.slug}`}
-                            className="group cursor-pointer transform transition-all duration-300 hover:scale-105 block"
-                        >
-                            <div className="relative overflow-hidden rounded-2xl shadow-md">
-                                <ImageWithFallback
-                                    src={category.image}
-                                    alt={category.name}
-                                    className="transition-transform duration-300 group-hover:scale-110"
-                                    wrapperClassName="h-64 w-full"
-                                    sizes="(min-width:1024px) 25vw, (min-width:768px) 33vw, 100vw"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-
-                                {/* Overlay on hover */}
-                                <div className="absolute inset-0 bg-[#CD8567]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                                {/* Content */}
-                                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                                    <h3 className="text-xl font-medium mb-1">{category.name}</h3>
-                                    <p className="text-xs text-white/80 mb-2">{category.subtitle}</p>
-                                    <p className="text-sm text-white/90">{category.description}</p>
+                {loading ? (
+                    <div className="text-center text-gray-600 py-12">Загрузка категорий…</div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {categories.map((category) => (
+                            <Link
+                                key={category.id}
+                                href={`/catalog/${category.slug}`}
+                                className="group cursor-pointer transform transition-all duration-300 hover:scale-105 block"
+                            >
+                                <div className="relative overflow-hidden rounded-2xl shadow-md">
+                                    {category.imagePath ? (
+                                        <div className="h-64 w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-110" style={{ backgroundImage: `url(http://localhost:8337${category.imagePath})` }} />
+                                    ) : (
+                                        <div className="h-64 w-full bg-gradient-to-br from-[#FDF8F5] to-[#F4E4D6] flex items-center justify-center">
+                                            <div className="text-6xl text-[#CD8567] opacity-60">{category.name.charAt(0)}</div>
+                                        </div>
+                                    )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                        <h3 className="text-xl font-medium mb-1">{category.name}</h3>
+                                        <p className="text-xs text-white/80 mb-2">семена, луковицы, рассада</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     );

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/app/components/ui/button";
@@ -14,7 +14,8 @@ import {
   SelectValue,
 } from "@/app/components/ui/select";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
-import { getCategories, getCategoryWithProducts, type CategoryWithProducts } from "@/lib/api";
+import AddToCartButton from "@/app/components/AddToCartButton";
+import { getCategories, getCategoryWithProducts, type CategoryWithProducts, type Category } from "@/lib/api";
 
 import {
   Home,
@@ -66,9 +67,11 @@ function ProductsPageInner({ params }: PageProps) {
       (typeof routeParams?.slug === "string" ? routeParams.slug : undefined) ??
       "tyulpany";
 
+  const router = useRouter();
   const categoryTitle = humanizeSlug(slug);
   const [loading, setLoading] = useState(true);
   const [categoryData, setCategoryData] = useState<CategoryWithProducts | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -76,6 +79,7 @@ function ProductsPageInner({ params }: PageProps) {
       try {
         setLoading(true);
         const cats = await getCategories();
+        setCategories(cats);
         const found = cats.find((c) => c.slug === slug);
         if (!found) {
           setCategoryData({ id: "", name: categoryTitle, slug: slug!, products: [] });
@@ -137,10 +141,10 @@ function ProductsPageInner({ params }: PageProps) {
   };
 
   const handleCategoryFilter = (categorySlug: string) => {
-    if (categorySlug === "all") {
-      setFilterType("all");
-    } else {
-      setFilterType(categorySlug as FilterType);
+    // Navigate to selected category page per requirements
+    if (categorySlug && categorySlug !== slug) {
+      router.push(`/catalog/${categorySlug}`);
+      return;
     }
   };
 
@@ -208,17 +212,14 @@ function ProductsPageInner({ params }: PageProps) {
                 <span className="text-gray-700 font-medium">Фильтры:</span>
               </div>
 
-              <Select value={filterType} onValueChange={handleCategoryFilter}>
-                <SelectTrigger className="w-[180px] border-[#CD8567]/20">
-                  <SelectValue placeholder="Тип материала" />
+              <Select value={slug} onValueChange={handleCategoryFilter}>
+                <SelectTrigger className="w-[220px] border-[#CD8567]/20">
+                  <SelectValue placeholder="Категория" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Все типы</SelectItem>
-                  <SelectItem value="tyulpany">Тюльпаны</SelectItem>
-                  <SelectItem value="eustomy">Эустомы</SelectItem>
-                  <SelectItem value="hrizantemy">Хризантемы</SelectItem>
-                  <SelectItem value="orkhidei">Орхидеи</SelectItem>
-                  <SelectItem value="rozy">Розы</SelectItem>
+                  {categories.map((c) => (
+                    <SelectItem key={c.id} value={c.slug}>{c.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
@@ -323,10 +324,19 @@ function ProductsPageInner({ params }: PageProps) {
                     </p>
 
                     {/* CTA */}
-                    <div className="mt-auto">
-                      <Button className="w-full bg-[#CD8567] hover:bg-[#B8714C] text-white">
-                        В корзину
-                      </Button>
+                    <div className="mt-auto space-y-2">
+                      <Link href={`/catalog/${slug}/${product.id}`}>
+                        <Button className="w-full bg-[#CD8567] hover:bg-[#B8714C] text-white">
+                          Смотреть товар
+                        </Button>
+                      </Link>
+                      <AddToCartButton
+                        id={product.id}
+                        slug={slug!}
+                        name={product.name}
+                        image={product.image}
+                        className="w-full"
+                      />
                     </div>
                   </div>
                 </div>

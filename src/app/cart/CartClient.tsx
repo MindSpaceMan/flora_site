@@ -4,20 +4,22 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/app/components/ui/button";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
-import { useCart } from "@/store/cart";
+import { useApiCart } from "@/store/apiCart";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
 export default function CartClient() {
-  const items = useCart((s) => s.items);
-  const remove = useCart((s) => s.remove);
-  const setQty = useCart((s) => s.setQty);
-  const clear = useCart((s) => s.clear);
+  const items = useApiCart((s) => s.items);
+  const addItem = useApiCart((s) => s.addItem);
+  const removeItem = useApiCart((s) => s.removeItem);
+  const removeAllOfItem = useApiCart((s) => s.removeAllOfItem);
+  const sync = useApiCart((s) => s.sync);
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
-  }, []);
+    sync().catch(() => void 0);
+  }, [sync]);
 
   // Don't render cart content until mounted to prevent hydration mismatch
   if (!hasMounted) {
@@ -56,10 +58,10 @@ export default function CartClient() {
             <div key={item.id} className="bg-white rounded-lg border border-gray-200 p-6 flex items-center gap-4">
               {/* Product Image */}
               <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                {item.image ? (
+                {item.product?.images?.[0]?.url || item.product?.images?.[0]?.localPath ? (
                   <ImageWithFallback
-                    src={item.image}
-                    alt={item.name}
+                    src={item.product.images[0].url || item.product.images[0].localPath || ""}
+                    alt={item.product.titleRu}
                     fill
                     className="object-cover"
                     sizes="96px"
@@ -73,8 +75,8 @@ export default function CartClient() {
 
               {/* Product Info */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-medium text-gray-900 mb-1">{item.name}</h3>
-                <p className="text-sm text-gray-600">Категория: {item.slug}</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-1">{item.product.titleRu}</h3>
+                <p className="text-sm text-gray-600">Категория: {item.product.category?.name}</p>
               </div>
 
               {/* Quantity Controls */}
@@ -82,16 +84,16 @@ export default function CartClient() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setQty(item.id, Math.max(1, item.qty - 1))}
+                  onClick={() => (item.quantity <= 1 ? removeAllOfItem(item.product.id) : removeItem(item.product.id, 1))}
                   className="w-8 h-8 p-0"
                 >
                   <Minus className="w-4 h-4" />
                 </Button>
-                <span className="w-12 text-center font-medium">{item.qty}</span>
+                <span className="w-12 text-center font-medium">{item.quantity}</span>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setQty(item.id, item.qty + 1)}
+                  onClick={() => addItem(item.product.id, 1)}
                   className="w-8 h-8 p-0"
                 >
                   <Plus className="w-4 h-4" />
@@ -102,7 +104,7 @@ export default function CartClient() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => remove(item.id)}
+                onClick={() => removeAllOfItem(item.product.id)}
                 className="text-red-600 border-red-200 hover:bg-red-50"
               >
                 <Trash2 className="w-4 h-4" />
@@ -118,13 +120,18 @@ export default function CartClient() {
           <div className="space-y-3 mb-6">
             <div className="flex justify-between">
               <span className="text-gray-600">Товаров:</span>
-              <span className="font-medium">{items.reduce((sum, item) => sum + item.qty, 0)}</span>
+              <span className="font-medium">{items.reduce((sum, item) => sum + item.quantity, 0)}</span>
             </div>
           </div>
 
           <div className="border-t pt-4 space-y-3">
             <Button
-              onClick={clear}
+              onClick={async () => {
+                const snapshot = [...items];
+                for (const it of snapshot) {
+                  try { await removeItem(it.product.id, it.quantity); } catch { /* ignore per-item errors */ }
+                }
+              }}
               variant="outline"
               className="w-full text-red-600 border-red-200 hover:bg-red-50"
             >

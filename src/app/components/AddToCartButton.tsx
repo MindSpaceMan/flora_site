@@ -3,7 +3,8 @@
 
 import { useState } from "react";
 import { Button } from "@/app/components/ui/button";
-import { useCart } from "@/store/cart";
+// Switch to API-driven cart
+import { useApiCart } from "@/store/apiCart";
 import { ShoppingCart, Check } from "lucide-react";
 
 interface AddToCartButtonProps {
@@ -25,15 +26,12 @@ export default function AddToCartButton({
 }: AddToCartButtonProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const add = useCart((s) => s.add);
+  const addItem = useApiCart((s) => s.addItem);
 
   const handleAddToCart = async () => {
     setIsAdding(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    add({ id, slug, name, image }, qty);
+    await addItem(id, qty);
     
     setIsAdding(false);
     setShowSuccess(true);
